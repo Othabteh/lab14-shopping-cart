@@ -28,8 +28,14 @@ function handleSubmit() {
   var valueOfQuntity = inputNumber.value;
   var selectedTag = document.querySelector("select");
   var valueOfProduct = selectedTag.options[selectedTag.selectedIndex].value;
+  for (var i = 0; i < Product.allProducts.length; i++) {
+    if (valueOfProduct == Product.allProducts[i].name) {
+      var filePath = Product.allProducts[i].filePath;
+      break;
+    }
+  }
   // Do all the things ...
-  addSelectedItemToCart(valueOfProduct, valueOfQuntity);
+  addSelectedItemToCart(valueOfProduct, valueOfQuntity, filePath);
   cart.saveToLocalStorage();
   updateCounter();
   updateCartPreview();
@@ -37,11 +43,11 @@ function handleSubmit() {
 }
 
 // TODO: Add the selected item and quantity to the cart
-function addSelectedItemToCart(product, quantity) {
+function addSelectedItemToCart(product, quantity, image) {
   // TODO: suss out the item picked from the select list
   // TODO: get the quantity
   // TODO: using those, add one item to the Cart
-  cart.addItem(product, quantity);
+  cart.addItem(product, quantity, image);
 }
 
 // TODO: Update the cart count in the header nav with the number of items in the Cart
@@ -55,10 +61,25 @@ function updateCounter() {
 function updateCartPreview() {
   var cartContent = document.getElementById("cartContents");
   cartContent.innerHTML = "";
+  var comfirmPara = document.createElement("p");
+  comfirmPara.setAttribute("id", "comfirm");
+  comfirmPara.textContent = "your order has been added";
+  cartContent.innerHTML = "";
   var table = document.createElement("table");
+  var row = document.createElement("tr");
+  row.appendChild(comfirmPara);
+  table.appendChild(row);
+  row = document.createElement("tr");
+  var td = document.createElement("td");
+  td.textContent = "Product Name";
+  row.appendChild(td);
+  td = document.createElement("td");
+  td.textContent = "Product Quntity";
+  row.appendChild(td);
+  table.appendChild(row);
   for (var i = 0; i < cart.items.length; i++) {
-    var row = document.createElement("tr");
-    var td = document.createElement("td");
+    row = document.createElement("tr");
+    td = document.createElement("td");
     td.textContent = cart.items[i].product;
     row.appendChild(td);
     td = document.createElement("td");
